@@ -1,5 +1,6 @@
 package Database;
 import java.sql.*;
+import java.util.ArrayList;
 public class LearnData {
 	private String en;
 	private String vn;
@@ -55,25 +56,20 @@ public class LearnData {
 	}
 	
 	public int review() throws SQLException{
-		if (rs!=null){				 //luot goi thu 2 tro di trong session
-			if (rs.next()){         //neu chua di het rs hien tai
-				en = rs.getString("word");
-				vn = rs.getString("meaning");
-				eg = rs.getString("example");
-				
-				return 1;
-			} 
-		}
 		stmt = c.createStatement();
-		String query="SELECT * FROM wmt WHERE theme='"+theme+"' AND learned = 1 ORDER BY RANDOM();";
+		String query="SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM();";
 		rs = stmt.executeQuery(query);
 		if (rs.isBeforeFirst()==false){	//neu da hoc het theme
 			return 0;
 		}
 		rs.next();
+		if (Math.random()<0.5){
+			vn = rs.getString("word");
+			en = rs.getString("meaning");
+			return 1;
+		}
 		en = rs.getString("word");
 		vn = rs.getString("meaning");
-		eg = rs.getString("example");
 		return 1;
 	}
 	
@@ -83,4 +79,28 @@ public class LearnData {
 		stmt.executeUpdate(update);
 		return 1;
 	}
+	
+	public static ArrayList<LearnData> getQuestionList() throws SQLException{
+		stmt = c.createStatement();
+		
+		rs = stmt.executeQuery("SELECT COUNT(*) FROM wmt where learned=1;");
+		int count = rs.getInt(1);
+		
+		ArrayList<LearnData> list = new ArrayList<LearnData>();
+		while (list.size()<=10 && list.size() < 2*count){
+			LearnData item = new LearnData();
+			item.review();
+			int state = 0;
+			for (int i=0;i<list.size();i++){
+				if (list.get(i).en.equals(item.en)){
+					state = 1;
+					break;
+				}
+			}
+			if (state==0)
+				list.add(item);
+		}
+		return list;
+	}
+
 }
