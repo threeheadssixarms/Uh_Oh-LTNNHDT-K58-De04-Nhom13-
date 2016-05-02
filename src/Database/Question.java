@@ -12,8 +12,6 @@ public class Question {
 	private String answer1;
 	private String answer2;
 	private String answer3;
-	private String en;
-	private String vn;
 	private boolean completeType;
 	
 	public String getQuestion() {
@@ -39,15 +37,6 @@ public class Question {
 	public String getAnswer3() {
 		return answer3;
 	}
-
-	public String getEn() {
-		return en;
-	}
-
-	public String getVn() {
-		return vn;
-	}
-	
 
 	public boolean isCompleteType() {
 		return completeType;
