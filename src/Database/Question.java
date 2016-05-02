@@ -56,10 +56,13 @@ public class Question {
 	private static ArrayList<Word> getWordList () throws SQLException{
 		ArrayList<Word> list = new ArrayList<Word>();
 		stmt = c.createStatement();
-		rs = stmt.executeQuery("SELECT * FROM wmt ORDER BY RANDOM();");
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM();");
 		for (int i=0;i<20;i++){
 			Word word = new Word();
-			rs.next();
+			if(!rs.next()){
+				rs=stmt.executeQuery("SELECT * FROM wmt WHERE learned = 0 ORDER BY RANDOM();");
+				rs.next();
+			}
 			word.setEn(rs.getString("word"));
 			word.setVn(rs.getString("meaning"));
 			list.add(word);
@@ -68,26 +71,26 @@ public class Question {
 	}
 	
 	
-	private int makeQuestion(Word word) throws SQLException{
+	private void makeQuestion(Word word) throws SQLException{
 		String answer;
 		if (Math.random()<0.5){
-			this.question = word.getEn();
+			question = word.getEn();
 			answerTrue=word.getVn();
 			answer = "meaning";
 		} else {
-			this.question = word.getVn();
+			question = word.getVn();
 			answerTrue=word.getEn();
 			answer = "word";
 		}
 		if (Math.random()<0.5){
 			completeType=true;
-			return 1;
+			return;
 		}
 		completeType=false;
 		stmt = c.createStatement();
 		rs= stmt.executeQuery("SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM();");
 		if(rs.isBeforeFirst()==false){
-				  return 0;
+			rs=stmt.executeQuery("SELECT * FROM wmt WHERE learned = 0 ORDER BY RANDOM();");
 			 }
 			  answer0=answerTrue;
 			  if(rs.next())
@@ -120,13 +123,13 @@ public class Question {
 				   answer3=rs.getString(answer);
 			   }
 		   unscramble();	  
-		   return 1;
+		   return;
 	}
 	
 	public static ArrayList<Question> getQuestionList() throws SQLException{
 		ArrayList<Word> wordList = getWordList();
 		ArrayList<Question> list = new ArrayList<Question>();
-		for (int i=0; i<20 ;i++){
+		for (int i=0; i<wordList.size() ;i++){
 			Question question = new Question();
 			question.makeQuestion(wordList.get(i));
 			list.add(question);
