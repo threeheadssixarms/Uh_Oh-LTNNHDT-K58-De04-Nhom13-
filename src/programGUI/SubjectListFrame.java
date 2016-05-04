@@ -89,7 +89,7 @@ public class SubjectListFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						LearnData.theme = btnTmp.getText();
+						Word.theme = btnTmp.getText();
 						scrollPane.setVisible(false);
 						panelChoice.setVisible(true);
 					}

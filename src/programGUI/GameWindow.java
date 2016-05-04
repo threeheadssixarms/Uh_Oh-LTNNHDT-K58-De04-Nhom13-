@@ -31,8 +31,6 @@ public class GameWindow {
 	static int j;
 	static int curQues;
 	static int mark;
-	ArrayList<MultipleChoiceData> multiList;
-	ArrayList<LearnData> completeList;
 	ArrayList<Question> quesList;
 	private JLabel labelQuestionMC;
 	private JButton btnNextC;
@@ -79,8 +77,6 @@ public class GameWindow {
 	
 	
 	private void initialize() throws SQLException {
-		multiList = MultipleChoiceData.getQuestionList();
-		completeList = LearnData.getQuestionList();
 		quesList = Question.getQuestionList();
 		
 		frame = new JFrame();

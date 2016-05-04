@@ -23,8 +23,8 @@ import java.sql.SQLException;
 public class LearnWordWindow {
 
 	private JFrame frame;
-	LearnData learnWord;
-	int anhViet = 0;
+	private Word learnWord;
+	private int anhViet = 0;
 
 	/**
 	 * Launch the application.
@@ -55,7 +55,7 @@ public class LearnWordWindow {
 	 * @throws SQLException 
 	 */
 	private void initialize() throws SQLException {	
-		learnWord = new LearnData();
+		learnWord = new Word();
 		learnWord.learn();
 		
 		frame = new JFrame();
