@@ -114,17 +114,9 @@ public class SubjectListFrame {
 			}
 		});
 	    
-	    JButton btnGame = new JButton("Chơi game");
-	    btnGame.setBounds(142, 220, 180, 80);
-	    panelChoice.add(btnGame);
-	    btnGame.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-				GameWindow.main(null);
-			}
-		});
+	    JButton btnListWord = new JButton("Danh sách từ");
+	    btnListWord.setBounds(142, 220, 180, 80);
+	    panelChoice.add(btnListWord);
 	    
 	    frame.setVisible(true);
 		panelChoice.setVisible(false);
