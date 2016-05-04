@@ -12,7 +12,8 @@ public class Question {
 	private String answer1;
 	private String answer2;
 	private String answer3;
-	private boolean completeType;
+	private static long now = Calendar.getInstance().getTimeInMillis();
+	//private boolean completeType;
 	
 	public String getQuestion() {
 		return question;
@@ -37,28 +38,29 @@ public class Question {
 	public String getAnswer3() {
 		return answer3;
 	}
-
+	/*
 	public boolean isCompleteType() {
 		return completeType;
 	}
-
+	*/
 	private static ArrayList<Word> getWordList () throws SQLException{
 		ArrayList<Word> list = new ArrayList<Word>();
 		stmt = c.createStatement();
-		rs = stmt.executeQuery("SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM();");
+		rs = stmt.executeQuery("SELECT * FROM (SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM()) ORDER BY time;");
 		for (int i=0;i<20;i++){
 			Word word = new Word();
 			if(!rs.next()){
-				rs=stmt.executeQuery("SELECT * FROM wmt WHERE learned = 0 ORDER BY RANDOM();");
+				rs=stmt.executeQuery("SELECT * FROM(SELECT * FROM wmt WHERE learned = 0 ORDER BY RANDOM()) ORDER BY time;");
 				rs.next();
 			}
 			word.setEn(rs.getString("word"));
 			word.setVn(rs.getString("meaning"));
+			word.setTheme0(rs.getString("theme"));
 			list.add(word);
 		}
+		Collections.shuffle(list);
 		return list;
 	}
-	
 	
 	private void makeQuestion(Word word) throws SQLException{
 		String answer;
@@ -71,11 +73,13 @@ public class Question {
 			answerTrue=word.getEn();
 			answer = "word";
 		}
+		/*
 		if (Math.random()<0.5){
 			completeType=true;
 			return;
 		}
 		completeType=false;
+		*/
 		stmt = c.createStatement();
 		rs= stmt.executeQuery("SELECT * FROM wmt WHERE learned = 1 ORDER BY RANDOM();");
 		if(rs.isBeforeFirst()==false){
@@ -122,11 +126,11 @@ public class Question {
 			Question question = new Question();
 			question.makeQuestion(wordList.get(i));
 			list.add(question);
+			stmt.executeUpdate("UPDATE wmt SET time ='"+now+"' WHERE word ='"+wordList.get(i).getEn()+"' AND theme='"+wordList.get(i).getTheme0()+"';");
 			}
 		return list;
 		}
 		
-	
 	private void unscramble(){
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(answer0);
