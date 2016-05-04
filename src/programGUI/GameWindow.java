@@ -33,6 +33,7 @@ public class GameWindow {
 	static int mark;
 	ArrayList<MultipleChoiceData> multiList;
 	ArrayList<LearnData> completeList;
+	ArrayList<Question> quesList;
 	private JLabel labelQuestionMC;
 	private JButton btnNextC;
 	private JButton btnAnswer0;
@@ -80,6 +81,7 @@ public class GameWindow {
 	private void initialize() throws SQLException {
 		multiList = MultipleChoiceData.getQuestionList();
 		completeList = LearnData.getQuestionList();
+		quesList = Question.getQuestionList();
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 550, 650);
@@ -102,7 +104,8 @@ public class GameWindow {
 		panelEndGame.setVisible(false);
 		
 		final JLabel lblQuestionC = new JLabel("");
-		lblQuestionC.setText(completeList.get(j).getEn());
+		//lblQuestionC.setText(completeList.get(j).getEn());
+		lblQuestionC.setText(quesList.get(i).getQuestion());
 		lblQuestionC.setBounds(51, 46, 298, 108);
 		panelComplete.add(lblQuestionC);
 		
@@ -123,27 +126,32 @@ public class GameWindow {
 		
 		final JLabel labelQuestionMC = new JLabel();
 		labelQuestionMC.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		labelQuestionMC.setText(multiList.get( i ).getQuestion());
+		//labelQuestionMC.setText(multiList.get( i ).getQuestion());
+		labelQuestionMC.setText(quesList.get( i ).getQuestion());
 		labelQuestionMC.setBounds(44, 77, 332, 98);
 		panelMultipleChoice.add(labelQuestionMC);
 		
 		final JButton btnAnswer0 = new JButton("");
-		btnAnswer0.setText(multiList.get( i ).getAnswer0());
+		//btnAnswer0.setText(multiList.get( i ).getAnswer0());
+		btnAnswer0.setText(quesList.get( i ).getAnswer0());
 		btnAnswer0.setBounds(44, 261, 135, 53);
 		panelMultipleChoice.add(btnAnswer0);
 		
 		final JButton btnAnswer1 = new JButton("");
-		btnAnswer1.setText(multiList.get( i ).getAnswer1());
+		//btnAnswer1.setText(multiList.get( i ).getAnswer1());
+		btnAnswer1.setText(quesList.get( i ).getAnswer1());
 		btnAnswer1.setBounds(336, 261, 135, 53);
 		panelMultipleChoice.add(btnAnswer1);
 		
 		final JButton btnAnswer2 = new JButton("");
-		btnAnswer2.setText(multiList.get( i ).getAnswer2());
+		//btnAnswer2.setText(multiList.get( i ).getAnswer2());
+		btnAnswer2.setText(quesList.get( i ).getAnswer2());
 		btnAnswer2.setBounds(44, 392, 135, 53);
 		panelMultipleChoice.add(btnAnswer2);
 		
 		final JButton btnAnswer3 = new JButton();
-		btnAnswer3.setText(multiList.get( i ).getAnswer3());
+		//btnAnswer3.setText(multiList.get( i ).getAnswer3());
+		btnAnswer3.setText(quesList.get( i ).getAnswer3());
 		btnAnswer3.setBounds(336, 392, 135, 53);
 		panelMultipleChoice.add(btnAnswer3);
 		
@@ -188,7 +196,7 @@ public class GameWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub 
-				if (textFieldAnswer.getText().equalsIgnoreCase(completeList.get(j).getVn())) {
+				if (textFieldAnswer.getText().equalsIgnoreCase(quesList.get(i).getAnswerTrue())) {
 					mark = mark + 1;
 					System.out.print("đúng");
 				}
@@ -202,18 +210,26 @@ public class GameWindow {
 						i = i + 1;
 						panelComplete.setVisible(false);
 						panelMultipleChoice.setVisible(true);
+						/*
 						labelQuestionMC.setText(multiList.get( i ).getQuestion());
 						btnAnswer0.setText(multiList.get( i ).getAnswer0());
 						btnAnswer1.setText(multiList.get( i ).getAnswer1());
 						btnAnswer2.setText(multiList.get( i ).getAnswer2());
 						btnAnswer3.setText(multiList.get( i ).getAnswer3());
+						*/
+						labelQuestionMC.setText(quesList.get( i ).getQuestion());
+						btnAnswer0.setText(quesList.get( i ).getAnswer0());
+						btnAnswer1.setText(quesList.get( i ).getAnswer1());
+						btnAnswer2.setText(quesList.get( i ).getAnswer2());
+						btnAnswer3.setText(quesList.get( i ).getAnswer3());
 						answerChosen = "";
 					}
 					else {
-						j = j + 1;
+						i = i + 1;
 						panelMultipleChoice.setVisible(false);
 						panelComplete.setVisible(true);
-						lblQuestionC.setText(completeList.get(j).getEn());
+						//lblQuestionC.setText(completeList.get(j).getEn());
+						lblQuestionC.setText(quesList.get(i).getQuestion());
 						textFieldAnswer.setText("");
 					}
 				}
@@ -229,7 +245,8 @@ public class GameWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (answerChosen.equals(multiList.get(i).getAnswerTrue())) {
+				//if (answerChosen.equals(multiList.get(i).getAnswerTrue())) {
+				if (answerChosen.equals(quesList.get(i).getAnswerTrue())) {
 					mark = mark + 1;
 					System.out.print("đúng");
 				}
@@ -243,18 +260,26 @@ public class GameWindow {
 						i = i + 1;
 						panelComplete.setVisible(false);
 						panelMultipleChoice.setVisible(true);
+						/*
 						labelQuestionMC.setText(multiList.get( i ).getQuestion());
 						btnAnswer0.setText(multiList.get( i ).getAnswer0());
 						btnAnswer1.setText(multiList.get( i ).getAnswer1());
 						btnAnswer2.setText(multiList.get( i ).getAnswer2());
 						btnAnswer3.setText(multiList.get( i ).getAnswer3());
+						*/
+						labelQuestionMC.setText(quesList.get( i ).getQuestion());
+						btnAnswer0.setText(quesList.get( i ).getAnswer0());
+						btnAnswer1.setText(quesList.get( i ).getAnswer1());
+						btnAnswer2.setText(quesList.get( i ).getAnswer2());
+						btnAnswer3.setText(quesList.get( i ).getAnswer3());
 						answerChosen = "";
 					}
 					else {
-						j = j + 1;
+						i = i + 1;
 						panelMultipleChoice.setVisible(false);
 						panelComplete.setVisible(true);
-						lblQuestionC.setText(completeList.get(j).getEn());
+						//lblQuestionC.setText(completeList.get(i).getEn());
+						lblQuestionC.setText(quesList.get(i).getQuestion());
 						textFieldAnswer.setText("");
 					}
 				}

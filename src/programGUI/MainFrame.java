@@ -4,11 +4,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JPanel;
 
 public class MainFrame {
@@ -55,7 +57,7 @@ public class MainFrame {
 			}
 		});
 		btnAddSubject.setFont(new Font("Serif", Font.BOLD, 19));
-		btnAddSubject.setBounds(98, 96, 154, 54);
+		btnAddSubject.setBounds(98, 59, 154, 54);
 		btnAddSubject.setBackground(SystemColor.activeCaption);
 		btnAddSubject.setForeground(Color.BLACK);
 		
@@ -67,9 +69,23 @@ public class MainFrame {
 			}
 		});
 		btnLearnWords.setFont(new Font("Serif", Font.BOLD, 19));
-		btnLearnWords.setBounds(98, 177, 154, 54);
+		btnLearnWords.setBounds(98, 139, 154, 54);
 		frmProgram.getContentPane().setLayout(null);
 		frmProgram.getContentPane().add(btnAddSubject);
 		frmProgram.getContentPane().add(btnLearnWords);
+		
+		JButton btnGame = new JButton("");
+		btnGame.setText("Trò chơi");
+		btnGame.setFont(new Font("Serif", Font.BOLD, 19));
+		btnGame.setBounds(98, 211, 154, 54);
+		frmProgram.getContentPane().add(btnGame);
+		  btnGame.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frmProgram.setVisible(false);
+					GameWindow.main(null);
+				}
+			});
 	}
 }
