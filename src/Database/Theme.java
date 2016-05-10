@@ -7,6 +7,7 @@ public class Theme {
 	private static Connection c = DBConnection.getConnection();
 	private static ResultSet rs;
 	private static Statement stmt;
+	public static String key;
 	public String getTheme() {
 		return theme;
 	}
@@ -34,7 +35,6 @@ public class Theme {
 		stmt = c.createStatement();
 		rs=stmt.executeQuery("SELECT * FROM theme WHERE theme='"+theme+"';");
 		if (rs.isBeforeFirst()==true){
-		  	  //System.out.println("Da co chu de nay.");
 		  	  return 0;
 		    }
 		stmt.executeUpdate("INSERT INTO theme VALUES ('"+theme+"','"+des+"');");
@@ -45,11 +45,23 @@ public class Theme {
 		stmt = c.createStatement();
 		rs=stmt.executeQuery("SELECT * FROM theme WHERE theme='"+theme+"';");
 		if (rs.isBeforeFirst()==false){
-		  	  //System.out.println("Khong co chu de nay.");
 		   	  return 0;
 		   }
 		String delete="DELETE FROM theme WHERE theme='"+theme+"';";
 		stmt.executeUpdate(delete);
 		return 1;
+	}
+	
+	public static ArrayList<Theme> searchThemeList()throws SQLException{
+		stmt = c.createStatement();	
+		ArrayList<Theme> themeList = new ArrayList<Theme>();
+		rs = stmt.executeQuery("SELECT * FROM theme WHERE theme LIKE '%"+key+"%' OR des LIKE '%"+key+"%';");
+		while (rs.next()){
+			Theme item = new Theme();
+			item.theme=rs.getString("theme");
+			item.des=rs.getString("des");
+			themeList.add(item);
+		}
+		return themeList;
 	}
 }
