@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Word {
 	public static String theme;
+	public static String key;
 	private String en;
 	private String vn;
 	private String eg;
@@ -13,11 +14,11 @@ public class Word {
 	private static Connection c = DBConnection.getConnection();
 	private static ResultSet rs;
 	private static Statement stmt;
-	public String getEn() {
-		return en;
-	}
 	public String getVn() {
 		return vn;
+	}
+	public String getEn() {
+		return en;
 	}
 	public String getEg() {
 		return eg;
@@ -39,7 +40,6 @@ public class Word {
 		this.vn = vn;
 	}
 	public static ArrayList<Word> getWordList()throws SQLException{
-		rs = null;
 		stmt = c.createStatement();	
 		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme='"+theme+"';");
 		ArrayList<Word> wordList = new ArrayList<Word>();
@@ -47,6 +47,7 @@ public class Word {
 			Word item = new Word();
 			item.en=rs.getString("word");
 			item.vn=rs.getString("meaning");
+			item.eg=rs.getString("example");
 			wordList.add(item);
 		}
 		return wordList;
@@ -88,16 +89,29 @@ public class Word {
 			} 
 		}
 		stmt = c.createStatement();
-		String query="SELECT * FROM wmt WHERE theme='"+theme+"' AND learned = 0 ORDER BY RANDOM();";
-		rs = stmt.executeQuery(query);
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' AND learned = 0 ORDER BY RANDOM();");
 		if (rs.isBeforeFirst()==false){	//neu da hoc het theme
-			query="SELECT * FROM wmt WHERE theme='"+theme+"' ORDER BY time;";
-			rs = stmt.executeQuery(query);
+			rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' ORDER BY time;");
 		}
 		rs.next();
 		en = rs.getString("word");
 		vn = rs.getString("meaning");
-		eg=(rs.getString("example"));
+		eg=rs.getString("example");
 		checkLearned();
+	}
+	
+	public static ArrayList<Word> searchWordList()throws SQLException{
+		stmt = c.createStatement();	
+		ArrayList<Word> wordList = new ArrayList<Word>();
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE word='%"+key+"%' OR meaning LIKE '%"+key+"%';");
+		while (rs.next()){
+			Word item = new Word();
+			item.en=rs.getString("word");
+			item.vn=rs.getString("meaning");
+			item.eg=rs.getString("example");
+			wordList.add(item);
+		}
+		rs=null;
+		return wordList;
 	}
 }
