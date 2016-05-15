@@ -9,10 +9,9 @@ public class Word {
 	private String en;
 	private String vn;
 	private String eg;
-	private String theme0;
 	private static long now = Calendar.getInstance().getTimeInMillis();
 	private static Connection c = DBConnection.getConnection();
-	private static ResultSet rs;
+	public static ResultSet rs;
 	private static Statement stmt;
 	public String getVn() {
 		return vn;
@@ -23,14 +22,10 @@ public class Word {
 	public String getEg() {
 		return eg;
 	}
-	public String getTheme0() {
-		return theme0;
-	}
-	public void setTheme0(String theme0) {
-		this.theme0 = theme0;
-	}
-	public Word(){
-		super();
+	public Word(String en, String vn, String eg){
+		this.en = en;
+		this.vn = vn;
+		this.eg = eg;
 	}
 	
 	public void setEn(String en) {
@@ -39,38 +34,42 @@ public class Word {
 	public void setVn(String vn) {
 		this.vn = vn;
 	}
+	
+	public void setEg(String eg) {
+		this.eg = eg;
+	}
+	
 	public static ArrayList<Word> getWordList()throws SQLException{
 		stmt = c.createStatement();	
 		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme='"+theme+"';");
 		ArrayList<Word> wordList = new ArrayList<Word>();
 		while (rs.next()){
-			Word item = new Word();
-			item.en=rs.getString("word");
-			item.vn=rs.getString("meaning");
-			item.eg=rs.getString("example");
+			Word item = new Word(rs.getString("word"),rs.getString("meaning"),rs.getString("example"));
 			wordList.add(item);
 		}
+		rs=null;
 		return wordList;
 	}
+	
 	public static int add(String en, String vn, String eg) throws SQLException{
-		rs = null;
 		stmt = c.createStatement();
 		rs = stmt.executeQuery("SELECT * FROM wmt WHERE word='"+en+"';");
 		if (rs.isBeforeFirst()==true){
 		    	  return 0;
 		   }
-		stmt.executeUpdate("INSERT INTO wmt VALUES ('"+en+"','"+vn+"','"+theme+"',0,'"+eg+"');");
+		stmt.executeUpdate("INSERT INTO wmt VALUES ('"+en+"','"+vn+"','"+theme+"',0,'"+eg+"',0);");
+		rs = null;
 		return 1;
 	}
 	
 	public static int delete(String en) throws SQLException{
-		rs = null;
 		stmt = c.createStatement();
 		rs = stmt.executeQuery("SELECT * FROM wmt WHERE word='"+en+"' AND theme = '"+theme+"';");
 		if (rs.isBeforeFirst()==false){
 		    	  return 0;
 		    }
 		stmt.executeUpdate("DELETE FROM wmt WHERE word='"+en+"';");
+		rs = null;
 		return 1;
 	}
 	private void checkLearned() throws SQLException{
@@ -83,16 +82,13 @@ public class Word {
 			if (rs.next()){         //neu chua di het rs hien tai
 				en = rs.getString("word");
 				vn = rs.getString("meaning");
-				eg=(rs.getString("example"));
+				eg=rs.getString("example");
 				checkLearned();
 				return;
 			} 
 		}
 		stmt = c.createStatement();
-		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' AND learned = 0 ORDER BY RANDOM();");
-		if (rs.isBeforeFirst()==false){	//neu da hoc het theme
-			rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' ORDER BY time;");
-		}
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme = '"+theme+"' ORDER BY learned asc;");
 		rs.next();
 		en = rs.getString("word");
 		vn = rs.getString("meaning");
@@ -103,15 +99,29 @@ public class Word {
 	public static ArrayList<Word> searchWordList()throws SQLException{
 		stmt = c.createStatement();	
 		ArrayList<Word> wordList = new ArrayList<Word>();
-		rs = stmt.executeQuery("SELECT * FROM wmt WHERE word='%"+key+"%' OR meaning LIKE '%"+key+"%';");
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme= '"+theme+"' AND (word LIKE'%"+key+"%' OR meaning LIKE '%"+key+"%');");
 		while (rs.next()){
-			Word item = new Word();
-			item.en=rs.getString("word");
+			Word item = new Word(rs.getString("word"),rs.getString("meaning"),rs.getString("example"));
+			/*item.en=rs.getString("word");
 			item.vn=rs.getString("meaning");
-			item.eg=rs.getString("example");
+			item.eg=rs.getString("example");*/
 			wordList.add(item);
 		}
 		rs=null;
 		return wordList;
+	}
+	
+	public static boolean isThemeEmpty() throws SQLException{
+		stmt = c.createStatement();
+		return (!stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%';").isBeforeFirst());
+	}
+	
+	public boolean update(String newEn, String newVn, String newEg) throws SQLException{
+		delete(en);
+		if (add(newEn, newVn, newEg)==0){
+			add(en, vn, eg);
+			return false;
+		}
+		return true;
 	}
 }

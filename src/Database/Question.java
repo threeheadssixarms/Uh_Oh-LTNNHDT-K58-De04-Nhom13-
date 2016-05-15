@@ -38,21 +38,23 @@ public class Question {
 	public String getAnswer3() {
 		return answer3;
 	}
-
+	
+	private static int getWordCount() throws SQLException{
+		stmt = c.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM wmt where theme = '"+theme+"';");
+		return rs.getInt(1);
+	}
+	
 	private static ArrayList<Word> getWordList () throws SQLException{
 		ArrayList<Word> list = new ArrayList<Word>();
 		stmt = c.createStatement();
-		if (rs==null)
-			rs = stmt.executeQuery("SELECT * FROM(SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' and learned = 1)ORDER BY RANDOM();");
-		while (list.size()<10){
-			Word word = new Word();
-			if(!rs.next()){
-				rs=stmt.executeQuery("SELECT * FROM(SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' ORDER BY time) ORDER BY RANDOM();");
-				rs.next();
-			}
-			word.setEn(rs.getString("word"));
-			word.setVn(rs.getString("meaning"));
-			word.setTheme0(rs.getString("theme"));
+		rs = stmt.executeQuery("SELECT * FROM wmt WHERE theme = '"+theme+"' ORDER BY learned desc, time asc LIMIT 10;");
+		int count = getWordCount();
+		while (list.size()<10 && list.size()<count){
+			rs.next();
+			Word word = new Word(rs.getString("word"),rs.getString("meaning"), "");
+			/*word.setEn(rs.getString("word"));
+			word.setVn(rs.getString("meaning"));*/
 			list.add(word);
 		}
 		Collections.shuffle(list);
@@ -61,6 +63,8 @@ public class Question {
 	
 	private void makeQuestion(Word word) throws SQLException{
 		String answer;
+		int count=getWordCount();
+		stmt = c.createStatement();
 		if (Math.random()<0.5){
 			this.question = word.getEn();
 			answerTrue=word.getVn();
@@ -71,27 +75,21 @@ public class Question {
 			answer = "word";
 		}
 		ArrayList<String> answerList = new ArrayList<String>();
-		String queryAll="SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' AND "+answer+"!='"+answerTrue+"' ORDER BY RANDOM();";
-		stmt = c.createStatement();
-		while (answerList.size()<3){
-			ResultSet rs= stmt.executeQuery("SELECT * FROM wmt WHERE theme LIKE '%"+theme+"%' and learned = 1 AND "+answer+"!='"+answerTrue+"' ORDER BY RANDOM();");
-			if(rs.isBeforeFirst()==false){
-				rs=stmt.executeQuery(queryAll);
-			 }
-			  answer0=answerTrue;
-			  while (rs.next()||answerList.size()<3){
-				  int state = 0;
-				  for (int i=0; i<answerList.size();i++){
-					  if (answerList.get(i).equals(rs.getString(answer))){
-						  state=1;
-						  break;
-					  }
-				  }
-				  if (state==0)
-				  answerList.add(rs.getString(answer));
-			  }
-		}
 		answerList.add(answerTrue);
+		if (count<4){
+			ResultSet randomAnswerSet=stmt.executeQuery("SELECT * FROM wmt WHERE theme != '"+theme+"' ORDER BY learned desc, RANDOM();");
+			while (answerList.size()<(4-count)+1){
+				randomAnswerSet.next();
+				if (answerTrue.equals(randomAnswerSet.getString(answer))) continue;
+				answerList.add(randomAnswerSet.getString(answer));
+			}
+		}
+		ResultSet rs= stmt.executeQuery("SELECT * FROM wmt WHERE theme = '"+theme+"' ORDER BY learned desc, RANDOM();");
+		while (answerList.size()<4){
+			rs.next();
+			if (answerTrue.equals(rs.getString(answer))) continue;
+			answerList.add(rs.getString(answer));
+		}
 		Collections.shuffle(answerList);
 		answer0 = answerList.get(0);
 		answer1 = answerList.get(1);
@@ -102,13 +100,22 @@ public class Question {
 	
 	public static ArrayList<Question> getQuestionList() throws SQLException{
 		ArrayList<Word> wordList = getWordList();
+		int count=getWordCount();
 		ArrayList<Question> list = new ArrayList<Question>();
 		for (int i=0; i<wordList.size() ;i++){
 			Question question = new Question();
 			question.makeQuestion(wordList.get(i));
 			list.add(question);
-			stmt.executeUpdate("UPDATE wmt SET time ='"+now+"' WHERE word ='"+wordList.get(i).getEn()+"' AND theme='"+wordList.get(i).getTheme0()+"';");
+			stmt.executeUpdate("UPDATE wmt SET time ='"+now+"' WHERE word ='"+wordList.get(i).getEn()+"' AND theme = '"+theme+"';");
 			}
+		for(int i=0;list.size()<2*count && list.size()<10;i++){
+			Question question = new Question();
+			do{
+			question.makeQuestion(wordList.get(i));
+			}while (list.get(i).getQuestion().equals(question.question));
+			list.add(question);
+			stmt.executeUpdate("UPDATE wmt SET time ='"+now+"' WHERE word ='"+wordList.get(i).getEn()+"' AND theme = '"+theme+"';");	
+		}
 		return list;
 		}
 
