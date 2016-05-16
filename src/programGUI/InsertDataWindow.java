@@ -254,7 +254,7 @@ public class InsertDataWindow {
 		labelDescribe.setBounds(45, 242, 113, 38);
 		addSubjectPanel.add(labelDescribe);
 		
-		final JTextArea textAreaDescribe = new JTextArea();
+		textAreaDescribe = new JTextArea();
 		textAreaDescribe.setBackground(Color.WHITE);
 		textAreaDescribe.setWrapStyleWord(true);
 		textAreaDescribe.setRows(10);
@@ -276,11 +276,14 @@ public class InsertDataWindow {
 				else {
 					try {
 						if (Theme.add(textFieldSubject.getText().trim().toLowerCase(), textAreaDescribe.getText()) == 1) {
-							frame.setTitle("Thêm từ");
 							Word.theme = textFieldSubject.getText().toLowerCase();
 							addSubjectPanel.setVisible(false);
 							addWordPanel.setVisible(true);
+							textFieldEnglish.setText(null);
+							textFieldViet.setText(null);
+							textAreaDescribe.setText(null);
 							textFieldSubject.setText("");
+							textAreaDescribe.setText("");
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Đã có đề tài này");

@@ -40,7 +40,6 @@ import javax.swing.SwingConstants;
 public class SubjectListFrame {
 
 	private JFrame frame;
-	Theme dataTheme = new Theme();
 	private JTextField textField;
 	private ArrayList<Theme> themeList;
 	private JPanel panelListSubject;
@@ -51,8 +50,7 @@ public class SubjectListFrame {
 	private JButton btnListWord;
 	private JButton btnLearn;
 	private static JLabel lblSubjectName;
-	private ArrayList<JButton> buttonList;
-	int i;
+	private int i;
 	private JLabel bg1;
 	private JLabel bg2;
 
@@ -107,7 +105,6 @@ public class SubjectListFrame {
 	 */
 	private void initialize() throws SQLException, IOException {
 		themeList = Theme.getThemeList();
-		buttonList = new ArrayList<JButton>();
 		
 		frame = new JFrame();
 		frame.setResizable(false);

@@ -257,7 +257,7 @@ public class ListWordWindow {
 			lblTmpEn.setText(ToFirstUpper(wordList.get(i).getEn()));
 			lblTmpEn.setSize(145,55);
 			lblTmpEn.setLocation(0, 55*i+55);
-			lblTmpEn.setFont(new Font("Serif", Font.PLAIN, 15));
+			lblTmpEn.setFont(new Font("Serif", Font.PLAIN, 13));
 			lblTmpEn.setBorder(BorderFactory.createLineBorder(Color.white));
 			lblTmpEn.setHorizontalAlignment(SwingConstants.CENTER);
 			final JLabel lblTmpVn = new JLabel();
@@ -266,7 +266,7 @@ public class ListWordWindow {
 			lblTmpVn.setLocation(145, 55*i+55);
 			lblTmpVn.setBorder(BorderFactory.createLineBorder(Color.white));
 			lblTmpVn.setHorizontalAlignment(SwingConstants.CENTER);
-			lblTmpVn.setFont(new Font("Serif", Font.PLAIN, 15));
+			lblTmpVn.setFont(new Font("Serif", Font.PLAIN, 13));
 			final JButton btnTmpChange = new JButton();
 			btnTmpChange.setBorder(BorderFactory.createLineBorder(Color.white));
 			btnTmpChange.setSize(55,55);
@@ -439,6 +439,7 @@ public class ListWordWindow {
 				lblTmpEn.setSize(145,55);
 				lblTmpEn.setLocation(0, 55*i+55);
 				lblTmpEn.setBorder(BorderFactory.createLineBorder(Color.white));
+				lblTmpEn.setFont(new Font("Serif", Font.PLAIN, 13));
 				lblTmpEn.setHorizontalAlignment(SwingConstants.CENTER);
 				final JLabel lblTmpVn = new JLabel();
 				lblTmpVn.setText(ToFirstUpper(wordList.get(i).getVn()));
@@ -446,12 +447,13 @@ public class ListWordWindow {
 				lblTmpVn.setLocation(145, 55*i+55);
 				lblTmpVn.setBorder(BorderFactory.createLineBorder(Color.white));
 				lblTmpVn.setHorizontalAlignment(SwingConstants.CENTER);
+				lblTmpVn.setFont(new Font("Serif", Font.PLAIN, 13));
 				final JButton btnTmpChange = new JButton();
 				btnTmpChange.setBorder(BorderFactory.createLineBorder(Color.white));
 				btnTmpChange.setSize(55,55);
 				btnTmpChange.setLocation(290, 55*i+55);
 				btnTmpChange.setContentAreaFilled(false);
-				btnTmpChange.setIcon(new ImageIcon("image\\change.png"));
+				btnTmpChange.setIcon(new ImageIcon("image2\\change.png"));
 				final String tmpEg = wordList.get(i).getEg();
 				btnTmpChange.addActionListener(new ActionListener() {
 					
@@ -479,7 +481,7 @@ public class ListWordWindow {
 				btnTmpDelete.setBorder(BorderFactory.createLineBorder(Color.white));
 				btnTmpDelete.setSize(55,55);
 				btnTmpDelete.setLocation(345, 55*i+55);
-				btnTmpDelete.setIcon(new ImageIcon("image\\bin.png"));
+				btnTmpDelete.setIcon(new ImageIcon("image2\\bin.png"));
 				btnTmpDelete.setContentAreaFilled(false);
 				btnTmpDelete.addActionListener(new DeleteAction(lblTmpEn.getText().toLowerCase()));
 				btnTmpDelete.addMouseListener(new MouseAdapter() {

@@ -130,7 +130,7 @@ public class LearnWordWindow {
 		learnWordPanel.add(btnShowExample);
 		
 		
-		btnWord.setFont(new Font("DejaVu Serif Condensed", Font.PLAIN, 40));
+		btnWord.setFont(new Font("Gentium Book Basic", Font.PLAIN, 40));
 		btnWord.setBounds(57, 346, 440, 174);
 		btnWord.addMouseListener(new MouseInAndOut(btnWord));
 		learnWordPanel.add(btnWord);

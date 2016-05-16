@@ -128,7 +128,7 @@ public class MainFrame {
 		btnExit.addMouseListener(new MouseInAndOut(btnExit));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmProgram.setVisible(false);
+				System.exit(0);
 			}
 		});
 		

@@ -46,11 +46,11 @@ public class GameWindow {
 	public JPanel panelComplete;
 	public JPanel panelEndGame;
 	private JLabel lblMark;
-	static int i;
-	static int j;
-	static int curQues;
-	static int mark;
-	static int maxQues;
+	private int i;
+	private int j;
+	private int curQues;
+	private int mark;
+	private int maxQues;
 	ArrayList<Question> quesList;
 	private JLabel labelQuestionMC;
 	private JButton btnNextC;
@@ -58,13 +58,12 @@ public class GameWindow {
 	private JButton btnAnswer1;
 	private JButton btnAnswer2;
 	private JButton btnAnswer3;
-	private JButton btnAnswerTrue;
 	private JLabel lblTime;
 	private JLabel lblQuestionC;
 	private JTextField textFieldAnswer;
 	private int minutes;
 	private int seconds;
-	static String answerChosen;
+	private String answerChosen;
 	private long startTime;
 	private long endTime;
 	private JLabel bgChosen;
@@ -79,10 +78,7 @@ public class GameWindow {
 	 * Launch the application.
 	 */
 	public static void execute() {
-		i  = 0;
-		mark = 0;
-		curQues  = 1;
-		answerChosen = "";
+	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -111,6 +107,11 @@ public class GameWindow {
 	
 	
 	private void initialize() throws SQLException, IOException {
+		i  = 0;
+		mark = 0;
+		curQues  = 1;
+		answerChosen = "";
+
 		BufferedImage bufferChosen = ImageIO.read(getClass().getResource("/red.png"));
 		ImageIcon imageChosen = new ImageIcon(bufferChosen);
 		bgChosen = new JLabel(imageChosen);
@@ -176,7 +177,7 @@ public class GameWindow {
 		lblQuestionC = new JLabel("");
 		lblQuestionC.setFont(new Font("Serif", Font.BOLD, 23));
 		lblQuestionC.setHorizontalAlignment(SwingConstants.CENTER);
-		lblQuestionC.setText(quesList.get(i).getQuestion());
+		lblQuestionC.setText(ListWordWindow.ToFirstUpper(quesList.get(i).getQuestion()));
 		lblQuestionC.setBounds(62, 255, 441, 61);
 		panelComplete.add(lblQuestionC);
 		
@@ -207,7 +208,7 @@ public class GameWindow {
 		labelQuestionMC = new JLabel();
 		labelQuestionMC.setHorizontalAlignment(SwingConstants.CENTER);
 		labelQuestionMC.setFont(new Font("Serif", Font.BOLD, 25));
-		labelQuestionMC.setText(quesList.get( i ).getQuestion());
+		labelQuestionMC.setText(ListWordWindow.ToFirstUpper(quesList.get( i ).getQuestion()));
 		labelQuestionMC.setBounds(44, 184, 462, 57);
 		panelMultipleChoice.add(labelQuestionMC);
 		
@@ -505,7 +506,7 @@ public class GameWindow {
 					panelMultipleChoice.repaint();
 					panelComplete.setVisible(false);
 					panelMultipleChoice.setVisible(true);
-					labelQuestionMC.setText(quesList.get( i ).getQuestion());
+					labelQuestionMC.setText(ListWordWindow.ToFirstUpper(quesList.get( i ).getQuestion()));
 					btnAnswer0.setForeground(Color.black);
 					btnAnswer1.setForeground(Color.black);
 					btnAnswer2.setForeground(Color.black);
@@ -521,7 +522,7 @@ public class GameWindow {
 					panelMultipleChoice.setVisible(false);
 					panelComplete.setVisible(true);
 					lblNoQuesC.setText("Câu " + curQues);
-					lblQuestionC.setText(quesList.get(i).getQuestion());
+					lblQuestionC.setText(ListWordWindow.ToFirstUpper(quesList.get(i).getQuestion()));
 					textFieldAnswer.setText("");
 				}
 			}
@@ -587,7 +588,7 @@ public class GameWindow {
 	
 	private class CNextAction extends NextQuestion {
 		public void actionPerformed(ActionEvent e) {
-			if (textFieldAnswer.getText().equalsIgnoreCase(quesList.get(i).getAnswerTrue())) {
+			if (textFieldAnswer.getText().trim().equalsIgnoreCase(quesList.get(i).getAnswerTrue())) {
 				mark = mark + 1;
 				JOptionPane.showMessageDialog(frame, "Chính xác", "Kết quả", JOptionPane.PLAIN_MESSAGE);
 			}
